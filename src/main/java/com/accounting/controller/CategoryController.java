@@ -1,20 +1,40 @@
 package com.accounting.controller;
 
-import com.accounting.mapper.MapperUtil;
+
+import com.accounting.dto.CategoryDTO;
+import com.accounting.dto.ResponseWrapper;
+
 import com.accounting.service.CategoryService;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/category")
+@RequestMapping("/api/v1/categories")
 public class CategoryController {
 
     private final CategoryService categoryService;
-    private final MapperUtil mapperUtil;
 
 
-    public CategoryController(CategoryService categoryService, MapperUtil mapperUtil) {
+
+    public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
-        this.mapperUtil = mapperUtil;
+
     }
+  @GetMapping
+    public ResponseEntity <ResponseWrapper> readAllCategories(){
+        return ResponseEntity.ok(new ResponseWrapper("Categories are successfully retrieved",
+                categoryService.readAllCategories(),HttpStatus.OK));
+    }
+
+    @PostMapping
+    public ResponseEntity<ResponseWrapper> createCategory(@RequestBody CategoryDTO categoryDTO){
+        return ResponseEntity.ok(new ResponseWrapper("Category is successfully created"
+                , categoryService.create(categoryDTO),HttpStatus.OK));
+
+    }
+
+
+
 }
